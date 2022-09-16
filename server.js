@@ -1,7 +1,18 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-const upload = multer({ dest: './public/data/uploads' })
+
+let storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './public/data/uploads')
+    },
+    filename: function (req, file, cb) {
+      let extArray = file.mimetype.split("/");
+      let extension = extArray[extArray.length - 1];
+      cb(null, file.fieldname + '-' + Date.now()+ '.' +extension)
+    }
+  })
+const upload = multer({ storage: storage })
 
 
 const app = express();
